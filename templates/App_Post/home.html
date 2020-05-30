@@ -47,8 +47,9 @@
                     <div style="background-color: #f3f3f3;">
                         <a style="text-decoration: none; color: blueviolet;"
                            href="{% url 'App_Login:searching_user' user_is=post.author %}">
-                            {% if posts.author.user_profile.profile_pic %}
-                                <img class="rounded-circle" src="/media/{{ post.author.user_profile.profile_pic }}"
+{#                            <img src="{{ post.author.user_profile.profile_pic.url }}" alt="">#}
+                            {% if post.author.user_profile.profile_pic %}
+                                <img class="rounded-circle" src="{{ post.author.user_profile.profile_pic.url }}"
                                      alt="profile"
                                      width="38px"
                                      height="38px">
@@ -101,6 +102,7 @@
                     <div style="padding: 20px;">
                         <p>- {{ post.caption }}</p>
                         <p>{{ post.liked_post.count }} loved</p>
+                        <p>{{ post.post_comment.count }} Comments</p>
                         {% if post.pk in loved_post_list %}
                             <a href="{% url 'App_Post:no_loved' pk=post.pk %}"><img src="/media/loved.ico" alt=""
                                                                                     width="25px" height="25px"></a>
@@ -137,7 +139,7 @@
                     &nbsp;
                     <p class="position-fixed" style="font-family: Courier New, Courier, monospace">
                         <a href="{% url 'App_Login:profile' %}"
-                           style="color: black; text-decoration: none;"><b>{{ user.username }}</b></a>
+                           style="color: black; text-decoration: none;" title="Account"><b>{{ user.username }}</b></a>
                         <br>
                         <b style="color: #6f6c6c">{{ user.user_profile.full_name }}</b>
                     </p>

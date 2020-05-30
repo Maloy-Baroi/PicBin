@@ -8,7 +8,7 @@ from django.views.generic import UpdateView, DetailView
 
 from App_Post.forms import CommentForm
 from App_Login.models import Follow
-from App_Post.models import Posts, LoveReact
+from App_Post.models import Posts, LoveReact, Comment
 
 
 # Create your views here.
@@ -47,7 +47,7 @@ def no_loved(request, pk):
 @login_required
 def comment_post(request, pk):
     post = Posts.objects.get(pk=pk)
-    print("Post from comment form: ", post)
+    comments = Comment.objects.filter(post=post)
     comment_form = CommentForm()
     if request.method == 'POST':
         commentform = CommentForm(request.POST)
@@ -58,7 +58,8 @@ def comment_post(request, pk):
             comment.save()
             return HttpResponseRedirect(reverse('App_Post:home'))
 
-    return render(request, "App_Post/details_post.html", context={'comment_form': comment_form, 'post': post})
+    return render(request, "App_Post/details_post.html",
+                  context={'comment_form': comment_form, 'post': post, 'comments': comments})
 
 
 @login_required
