@@ -1,0 +1,103 @@
+{% extends 'navbar.html' %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_filters %}
+{% block title_block %}
+    {{ user.user_profile.full_name }}
+{% endblock %}
+{% block body_block %}
+    <script>
+        function startTime() {
+            let today = new Date();
+            let h = today.getHours();
+            let m = today.getMinutes();
+            let s = today.getSeconds();
+            m = checkTime(m);
+            s = checkTime(s);
+            document.getElementById('txt').innerHTML =
+                h + ":" + m + ":" + s;
+            let t = setTimeout(startTime, 500);
+        }
+
+        function checkTime(i) {
+            if (i < 10) {
+                i = "0" + i
+            }  // add zero in front of numbers < 10
+            return i;
+        }
+    </script>
+    <div class="row">
+        <div class="col-sm-4">
+            {% if user.user_profile.profile_pic %}
+                <img src="/media/{{ user.user_profile.profile_pic }}"
+                     alt="default profile pictures"
+                     class="rounded-circle"
+                     style="width: 150px; height: 150px">
+            {% else %}
+                <img src="/media/profile_pictures/default.png"
+                     alt="default profile pictures"
+                     class="rounded-circle"
+                     style="width: 150px; height: 152px">
+            {% endif %}
+        </div>
+        <div class="col-sm-8" style="margin-top: 20px;">
+            <h3>{{ user.username }} &nbsp; <a href="{% url 'App_Login:edit_profile' %}" class="btn btn-dark btn-sm">
+                Edit Profile <i class="fa fa-edit"></i></a></h3>
+            <span>{{ user.post.count }} <span>Posts</span></span> &nbsp;
+            <span>{{ user.following.count }} <span>followers</span></span> &nbsp;
+            <span>{{ user.follower.count }} <span>followings</span></span> <br><br>
+            <dl class="blockquote">
+                <dt>{{ user.user_profile.full_name }}</dt>
+                <code>- {{ user.user_profile.description }}</code>
+                <div id="txt"></div>
+            </dl>
+            <div style="float: right;">
+                <!-- Button to Open the Modal -->
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+                    Post
+                </button>
+            </div>
+        </div>
+    </div>
+    <hr/>
+    <div class="container">
+
+        <!-- The Modal -->
+        <div class="modal" id="myModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h3>Post A Photo</h3>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {{ form|crispy }}
+                            <button type="submit" class="btn btn-success"
+                                    style="width: 100%; display: block; padding: 10px; border-radius: 10px">Post
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        {% for post in user.post.all %}
+            <a href="{% url 'App_Post:details_my_picture' pk=post.pk %}"><img src="/media/{{ post.post_image }}"
+                                                                              id="upload_image"
+                                                                              title="#{{ post.caption }}
+{{ post.liked_post.count }} loved
+{{ post.post_comment.count }}commented" width="294" height="294"></a>
+        {% endfor %}
+    </div>
+{% endblock %}

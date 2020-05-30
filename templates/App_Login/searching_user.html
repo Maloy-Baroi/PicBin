@@ -1,0 +1,57 @@
+{% extends 'navbar.html' %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_filters %}
+{% block title_block %}
+    {{ user_other.user_profile.full_name }}
+{% endblock %}
+{% block body_block %}
+    <style>
+        hr {
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            border: 0;
+            border-top: 1px solid rgba(255, 0, 0, 0.1);
+        }
+    </style>
+    <div class="row">
+        <div class="col-sm-4">
+            {% if user_other.user_profile.profile_pic %}
+                <img src="/media/{{ user_other.user_profile.profile_pic }}"
+                     alt="default profile pictures"
+                     class="rounded-circle"
+                     style="width: 150px; height: 150px">
+            {% else %}
+                <img src="/media/profile_pictures/default.png"
+                     alt="default profile pictures"
+                     class="rounded-circle"
+                     style="width: 150px; height: 152px">
+            {% endif %}
+        </div>
+        <div class="col-sm-8" style="margin-top: 20px;">
+            <h3>{{ user_other.username }} &nbsp;
+                {% if already_follow %}
+                    <a href="{% url 'App_Login:unfollow' user_is=user_other.username %}" class="btn btn-dark btn-sm">
+                        Unfollow <i class="fa fa-eye-slash"></i></a>
+                {% else %}
+                    <a href="{% url 'App_Login:follow' user_is=user_other.username %}" class="btn btn-dark btn-sm">
+                        Follow <i class="fa fa-eye"></i></a>
+                {% endif %}
+            </h3>
+            <span>{{ user_other.post.count }} <span>Posts</span></span> &nbsp;
+            <span>{{ user_other.following.count }} <span>followers</span></span> &nbsp;
+            <span>{{ user_other.follower.count }} <span>followings</span></span> <br><br>
+            <dl class="blockquote">
+                <dt>{{ user_other.user_profile.full_name }}</dt>
+                <code>- {{ user_other.user_profile.description }}</code>
+            </dl>
+            <div style="float: right;">
+            </div>
+        </div>
+    </div>
+    <hr/>
+    <div>
+        {% for post in user_other.post.all %}
+            <img src="/media/{{ post.post_image }}" width="294" height="294">
+        {% endfor %}
+    </div>
+{% endblock %}

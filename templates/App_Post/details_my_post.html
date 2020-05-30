@@ -1,0 +1,28 @@
+{% extends 'navbar.html' %}
+{% block title_block %}
+    My Post
+{% endblock %}
+{% block body_block %}
+    <style>
+        .photo-showcase {
+            width: 750px;
+            border: 1px solid #b1abab;
+            padding: 20px;
+            text-align: center;
+        }
+    </style>
+    <center>
+        <div style="text-align: center;" class="photo-showcase">
+            <p>#{{ posts.caption }}</p>
+            <p>{{ posts.upload_date }}</p>
+            <img src="/media/{{ posts.post_image }}" alt="post image {{ posts.id }}" height="1280px" width="720px">
+        </div>
+    </center>
+    <div style="padding: 20px; text-align: center;">
+        <a href="{% url 'App_Post:update_post' pk=posts.pk %}" class="btn btn-primary btn-sm"
+           title="click here to update post">Update</a>
+        <a href="{% url 'App_Post:delete_post' pk=posts.pk %}" class="btn btn-primary btn-sm"
+           title="click here to Delete post">Delete</a>
+    </div>
+
+{% endblock %}

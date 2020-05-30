@@ -1,0 +1,37 @@
+{% extends 'navbar.html' %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+{% block title_block %}
+    Details
+{% endblock %}
+{% block body_block %}
+    <style>
+        .sign_up {
+            width: 100%;
+            border: 1px solid #eeeeee;
+            padding: 20px;
+            text-align: center;
+        }
+    </style>
+    <div class="sign_up">
+        <div style="background-color: #f3f3f3;">
+            <a style="text-decoration: none; color: blueviolet;"
+               href="{% url 'App_Login:searching_user' user_is=post.author %}"><img
+                    class="rounded-circle" src="/media/{{ post.author.user_profile.profile_pic }}"
+                    alt="profile"
+                    width="38px"
+                    height="38px"> &nbsp;
+                {{ post.author }}
+            </a>
+        </div>
+        <hr style="background-color: #000000;">
+        <div>
+                <img src="/media/{{ post.post_image }}" width="100%" alt="Post" title="{{ post.caption }}">
+        </div>
+    </div><br>
+    <form method="post">
+        {% csrf_token %}
+        {{ comment_form|crispy }}
+        <button type="submit" class="btn btn-primary btn-sm">comment</button>
+    </form>
+{% endblock %}

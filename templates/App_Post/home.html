@@ -1,0 +1,148 @@
+{% extends 'navbar.html' %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+{% block title_block %}
+    {{ title }}
+{% endblock %}
+{% block search_bar %}
+    <form class="form-inline my-2 my-lg-0" method="get">
+        <input class="form-control mr-sm-2" type="search" name="search_bar" placeholder="Search People"
+               aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+{% endblock %}
+{% block body_block %}
+    <style>
+        .sign_up {
+            width: 100%;
+            border: 1px solid #b1abab;
+            padding: 20px;
+        }
+    </style>
+    {% if result %}
+        {% for res in result %}
+            <div class="row">
+                <div class="col-sm-2">
+                    {% if res.user_profile.profile_pic %}
+                        <img src="{{ res.user_profile.profile_pic.url }}" width="75" height="74" class="rounded-circle">
+                    {% else %}
+                        <img src="/media/profile_pictures/default.png" width="75" height="74"
+                             class="rounded-circle">
+                    {% endif %}
+                </div>
+                <div class="col-sm-10">
+                    <a href="{% url 'App_Login:searching_user' user_is=res.username %}">@{{ res.username }}</a>
+                    <br> {{ res.user_profile.full_name }}
+                </div>
+            </div>
+            <br><br>
+            <hr>
+        {% endfor %}
+    {% endif %}
+
+    <div class="row">
+        <div class="col-sm-8">
+            {% for post in posts %}
+                <div class="sign_up">
+                    <div style="background-color: #f3f3f3;">
+                        <a style="text-decoration: none; color: blueviolet;"
+                           href="{% url 'App_Login:searching_user' user_is=post.author %}">
+                            {% if posts.author.user_profile.profile_pic %}
+                                <img class="rounded-circle" src="/media/{{ post.author.user_profile.profile_pic }}"
+                                     alt="profile"
+                                     width="38px"
+                                     height="38px">
+                            {% else %}
+                                <img src="/media/profile_pictures/default.png" alt="profile" width="38px" height="38px">
+                            {% endif %}&nbsp;
+                            {{ post.author }}
+                        </a>
+                    </div>
+                    <hr style="background-color: #000000;">
+                    <div>
+                        <a href="{% url 'App_Post:comment' pk=post.pk %}">
+                            <img src="/media/{{ post.post_image }}" width="100%" alt="Post">
+                        </a>
+                    </div>
+                    <div style="padding: 20px;">
+                        <p>- {{ post.caption }}</p>
+                        <p>{{ post.liked_post.count }} loved</p>
+                        {% if post.pk in loved_post_list %}
+                            <a href="{% url 'App_Post:no_loved' pk=post.pk %}"><img src="/media/loved.ico" alt=""
+                                                                                    width="25px" height="25px"></a>
+                        {% else %}
+                            <a href="{% url 'App_Post:loved' pk=post.pk %}">
+                                <i class="fa fa-heart-o"
+                                   style="color: red; width: 25px; height: 25px">
+                                </i>
+                            </a>
+                        {% endif %}
+                    </div>
+                </div><br><br><br>
+            {% endfor %}
+            {% for post in user.post.all %}
+                <div class="sign_up">
+                    <div style="background-color: #f3f3f3;">
+                        <a style="text-decoration: none; color: blueviolet;"
+                           href="{% url 'App_Login:searching_user' user_is=post.author %}"><img
+                                class="rounded-circle" src="/media/{{ post.author.user_profile.profile_pic }}"
+                                alt="profile"
+                                width="38px"
+                                height="38px"> &nbsp;
+                            {{ post.author }}
+                        </a>
+                    </div>
+                    <hr style="background-color: #000000;">
+                    <div>
+                        <a href="{% url 'App_Post:comment' pk=post.pk %}">
+                            <img src="/media/{{ post.post_image }}" width="100%" alt="Post">
+                        </a>
+                    </div>
+                    <div style="padding: 20px;">
+                        <p>- {{ post.caption }}</p>
+                        <p>{{ post.liked_post.count }} loved</p>
+                        {% if post.pk in loved_post_list %}
+                            <a href="{% url 'App_Post:no_loved' pk=post.pk %}"><img src="/media/loved.ico" alt=""
+                                                                                    width="25px" height="25px"></a>
+                        {% else %}
+                            <a href="{% url 'App_Post:loved' pk=post.pk %}">
+                                <i class="fa fa-heart-o"
+                                   style="color: red; width: 25px; height: 25px">
+                                </i>
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+
+        </div>
+        <div class="col-sm-4">
+            &nbsp;
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="position-fixed">
+                        &nbsp;
+                        &nbsp;
+                        &nbsp;
+                        {% if user.user_profile.profile_pic %}
+                            <img src="{{ user.user_profile.profile_pic.url }}" width="75" height="74"
+                                 class="rounded-circle">
+                        {% else %}
+                            <img src="/media/profile_pictures/default.png" style="width: 75px; height: 74px;"
+                                 class="rounded-circle">
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-sm-8">
+                    &nbsp;
+                    <p class="position-fixed" style="font-family: Courier New, Courier, monospace">
+                        <a href="{% url 'App_Login:profile' %}"
+                           style="color: black; text-decoration: none;"><b>{{ user.username }}</b></a>
+                        <br>
+                        <b style="color: #6f6c6c">{{ user.user_profile.full_name }}</b>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

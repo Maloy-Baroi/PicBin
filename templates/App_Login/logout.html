@@ -1,0 +1,8 @@
+{% extends 'navbar.html' %}
+{% block title_block %}
+    Logout
+{% endblock %}
+{% block body_block %}
+    <h3 class="alert alert-info">Logged out. Login again <a href="{% url 'App_Login:login' %}">here!</a></h3>
+{% endblock %}
+
